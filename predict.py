@@ -4,7 +4,7 @@ import random
 import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.resolve())+'/src')
 
-from const import DIR, PATH_TEST_DIR, PATH_TEST_LABELS, WEIGHTS_PATH, PREDICT_PATH
+from const import DIR, WEIGHTS_PATH, PREDICT_PATH
 from config import MODEL, ALPHABET, N_HEADS, ENC_LAYERS, DEC_LAYERS, DEVICE, HIDDEN
 
 from utils import generate_data, process_data 
@@ -29,9 +29,9 @@ if WEIGHTS_PATH != None:
 
 preds = prediction(model, PREDICT_PATH, char2idx, idx2char)
 
-f = open(DIR+'/predictions.tsv', 'w')
+f = open(str(DIR)+'/predictions.tsv', 'w')
 f.write('filename\tprediction\n')
 for item in preds.items():
   f.write(item[0]+'\t'+item[1]+'\n')
 f.close()
-print(f'predictions are saved in {DIR}predictions.tsv')
+print(f'predictions are saved in {DIR}/predictions.tsv')

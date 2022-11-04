@@ -106,16 +106,15 @@ def char_error_rate(p_seq1, p_seq2):
     p2c = dict(zip(p_vocab, range(len(p_vocab))))
     c_seq1 = [chr(p2c[p]) for p in p_seq1]
     c_seq2 = [chr(p2c[p]) for p in p_seq2]
-    if len(c_seq1) == 0 or len(c_seq2) != 0:
+    if len(c_seq1) == 0 and len(c_seq2) != 0:
       return 1.0
-    if len(c_seq1) == 0 or len(c_seq2) != 0:
+    if len(c_seq2) == 0 and len(c_seq1) != 0:
       return 1.0
     if len(c_seq1) == 0 and len(c_seq2) == 0:
       return 0.0
 
-    return editdistance.eval(''.join(c_seq1),
-                             ''.join(c_seq2)) / max(len(c_seq1), len(c_seq2))
-
+    r = editdistance.eval(''.join(c_seq1),''.join(c_seq2)) / max(len(c_seq1), len(c_seq2))
+    return r
 
 # RESIZE AND NORMALIZE IMAGE
 def process_image(img):
@@ -248,12 +247,12 @@ def prediction(model, test_dir, char2idx, idx2char):
         value : dict with keys ['p_value', 'predicted_label']
     """
     preds = {}
-    os.makedirs('/output', exist_ok=True)
+    os.makedirs('output', exist_ok=True)
     model.eval()
 
     with torch.no_grad():
         for filename in os.listdir(test_dir):
-            img = Image.open(test_dir + filename).convert('RGB')
+            img = Image.open(str(test_dir) + '/' + filename).convert('RGB')
 
             img = process_image(np.asarray(img)).astype('uint8')
             img = img / img.max()
